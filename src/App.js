@@ -1,22 +1,47 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import * as BooksAPI from './api/BooksAPI';
-import logo from './icons/logo.png';
-import AppBar from 'material-ui/AppBar';
-import { Link } from 'react-router-dom';
+import Header from './view/header/Header';
+import About from './view/about/About';
+import Shelves from './view/shelves/Shelves';
+import Search from './view/search/Search'
+
 import { Route } from 'react-router-dom'
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar';
+
+const shelfTypes = {
+    currentlyReading: {
+        id: 'currentlyReading',
+        label: 'Currently Reading',
+        display: true
+    },
+    wantToRead: {
+        id: 'wantToRead',
+        label: 'Want to Read',
+        display: true
+    },
+    read: {
+        id: 'read',
+        label: 'Read',
+        display: true
+    },
+    none: {
+        id: 'none',
+        label: '',
+        display: false
+    }
+};
+
 
 class App extends Component {
 
-    state = {
-        /**
-         * TODO: Instead of using this state variable to keep track of which page
-         * we're on, use the URL in the browser's address bar. This will ensure that
-         * users can use the browser's back and forward buttons to navigate between
-         * pages, as well as provide a good URL they can bookmark and share.
-         */
-        books: [],
-        headerTitle: 'Home'
+    constructor(props) {
+        super(props);
+        this.state = {
+            books: []
+        };
+
+        this.bookUpdate = this.bookUpdate.bind(this);
+        this.modifyBook = this.modifyBook.bind(this);
+
     }
 
     componentDidMount() {
@@ -25,27 +50,47 @@ class App extends Component {
         })
     }
 
+    bookUpdate(book, shelf, callback = () =>{}) {
+        if (shelf.trim() === '') return;
+
+        BooksAPI.update(book, shelf).then(() => {
+            this.modifyBook(book, shelf)
+            return callback()
+        });
+
+    }
+
+    modifyBook(book, shelf) {
+        book.shelf = shelf;
+        this.setState(prevState => {
+            return {
+                books: [
+                    ...prevState.books.filter(
+                        elem => elem.id !== book.id
+                    ),
+                    book
+                ]
+            }
+        })
+    }
+
     render() {
-    return (
-      <div>
-          <Route exact path='/' render={() => (
-          <AppBar
-              title={this.state.headerTitle}
-              iconElementLeft={
-                  <Link to="/">
-                      <img src={logo} alt="Logo" />
-                  </Link>}>
-              <Toolbar>
-                  <ToolbarGroup firstChild={true}>
+        return (
+            <div>
+                <Header />
+                <Route exact path="/" render={() => (
+                    <Shelves books={this.state.books}
+                             types={shelfTypes}
+                             onBookUpdate={this.bookUpdate.bind(this)}/>
+                )}/>
+                <Route path="/search" render={() => (
+                    <Search />
+                )}/>
+                <Route path="/about" component={About} />
 
-                  </ToolbarGroup>
-              </Toolbar>
-          </AppBar>
-
-          )}/>
-      </div>
-    );
-  }
+            </div>
+        );
+    }
 }
 
 export default App;
