@@ -52,6 +52,20 @@ class Shelf extends Component {
         }));
     }
 
+    moveBook(dragIndex, hoverIndex) {
+        const { shelfBooks } = this.state;
+        const dragBook = shelfBooks[dragIndex];
+
+        this.setState(update(this.state, {
+            shelfBooks: {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, dragBook]
+                ]
+            }
+        }));
+    }
+
     componentWillReceiveProps(nextProps){
         this.setState( {
             shelfBooks: nextProps.books
@@ -90,6 +104,7 @@ class Shelf extends Component {
                                 shelfId={book.shelf}
                                 index={i}
                                 removeBook={this.removeBook.bind(this)}
+                                moveBook={this.moveBook.bind(this)}
                             />
                         ))}
                     </div>
@@ -97,7 +112,6 @@ class Shelf extends Component {
         )
     }
 }
-
 
 Shelf.propTypes = {
     title: PropTypes.string.isRequired,
@@ -111,13 +125,9 @@ Shelf.propTypes = {
 
 const bookTarget = {
     drop(props, monitor, component) {
-        var t0 = performance.now();
-
         const {id} = props;
         const sourceObj = monitor.getItem();
         if (id !== sourceObj.shelfId) component.pushBook(sourceObj.book);
-        var t1 = performance.now();
-        console.log("Call to drop:  " + (t1 - t0) + " milliseconds.")
         return {
             shelfId: id
         }

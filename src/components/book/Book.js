@@ -4,6 +4,7 @@ import Image from 'material-ui-image';
 import {Link} from 'react-router-dom';
 import {DragSource, DropTarget} from 'react-dnd';
 import {findDOMNode} from 'react-dom';
+import flow from 'lodash/flow';
 import {ItemTypes} from './../constants/Constants';
 import PropTypes from 'prop-types'
 
@@ -57,7 +58,7 @@ class Book extends Component {
                  ref={instance => {
                      const node = findDOMNode(instance);
                      connectDragSource(node);
-
+                     connectDropTarget(node);
                  }}>
                 <Card key={book.id} className="book-content">
                     <CardMedia>
@@ -80,6 +81,35 @@ class Book extends Component {
     }
 }
 
+const bookSource = {
+
+    beginDrag(props) {
+        return {
+            index: props.index,
+            shelfId: props.shelfId,
+            book: props.book
+        };
+    },
+
+    endDrag(props, monitor) {
+        const item = monitor.getItem();
+        const dropResult = monitor.getDropResult();
+
+        console.log("book-endDrag - item:", item);
+        console.log("book-endDrag - dropResult:", dropResult);
+
+        if (dropResult && dropResult.shelfId !== item.shelfId) {
+            props.removeBook(item.index);
+        }
+    }
+};
+
+const bookTarget = {
+
+    hover(props, monitor, component) {
+        return {}
+    }
+};
 
 Book.propTypes  = {
     connectDragSource: PropTypes.func.isRequired,
@@ -90,21 +120,12 @@ Book.propTypes  = {
     removeBook:PropTypes.func.isRequired
 }
 
-
-const bookSource = {
-    beginDrag(props) {
-        return {
-            index: props.index,
-            shelfId: props.shelfId,
-            book: props.book
-        };
-    },
-};
-
-
-export default
+export default flow(
+    DropTarget(ItemTypes.BOOK, bookTarget, connect => ({
+        connectDropTarget: connect.dropTarget()
+    })),
     DragSource(ItemTypes.BOOK, bookSource, (connect, monitor) => ({
         connectDragSource: connect.dragSource(),
         isDragging: monitor.isDragging()
-    })
+    }))
 )(Book);
