@@ -1,0 +1,26 @@
+
+.shelf {
+    margin: 0 48px 32px 0;
+    background-color: cadetblue;
+    width: 100%;
+}
+
+.shelfTitleContainer {
+
+}
+.shelfTitle {
+    width: 100%;
+    padding-bottom: 15px;
+
+}
+
+.shelfContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    align-content: flex-start;
+    justify-content: flex-start;
+    padding: 10px 25px 25px 25px;
+
+}
