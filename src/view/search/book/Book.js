@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import Image from 'material-ui-image';
 import NoCover from './../../../images/cover-no-image.jpg';
 import Chip from 'material-ui/Chip';
-import { ShelfTypes } from './../../../components/constants/Constants'
+import { ShelfTypes } from './../../../components/constants/Constants';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 class Book extends Component {
 
@@ -80,16 +82,21 @@ class Book extends Component {
                         {book.description}
                     </div>
                     <div className="item-actions">
-                        <select onChange={(e) => {
-                            this.props.onBookUpdate(book, e.target.value)
-                        }}>
-                            <option value="">Move to...</option>
-
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                            <option value="none">None</option>
-                        </select>
+                        <SelectField
+                            floatingLabelText="Move to..."
+                            value={this.hasShelf(book) ? book.shelf : null}
+                            floatingLabelStyle={{color: 'white' }}
+                            style={{width: 185 }}
+                            onChange={(event, index, value) => {
+                                console.log("select value:", value)
+                                this.props.onBookUpdate(book, value)
+                            }}
+                        >
+                            <MenuItem value="currentlyReading" primaryText="Currently Reading" />
+                            <MenuItem value="wantToRead" primaryText="Want to Read" />
+                            <MenuItem value="read" primaryText="Read" />
+                            <MenuItem value="none" primaryText="None" />
+                        </SelectField>
                     </div>
 
                 </div>

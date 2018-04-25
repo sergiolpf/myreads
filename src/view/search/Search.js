@@ -69,10 +69,10 @@ class Search extends Component {
     render() {
         return (
             <div className="search-content">
-                {/*<h1>Search Page</h1>*/}
                 <SearchBar
                     /*dataSource={SearchHint}*/
                     onChange={debounce((value) => this.updateQuery(value), 400)}
+                    onRequestSearch={debounce((value) => this.updateQuery(value), 400)}
                 />
                 {this.state.isLoading && (
                     <div className="results-count">
