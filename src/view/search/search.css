@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css?family=La+Belle+Aurore');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+
+.search-content {
+    padding: 30px 40px 30px 30px;
+    position: relative;
+    font-family: 'Roboto', cursive;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    min-height: 100%;
+    flex: 1;
+}
+
+.search-content h1 {
+    color: white;
+    font-family: 'La Belle Aurore', cursive;
+}
+
+.search-content .results-count{
+    float: left;
+    margin: 20px 0 20px 0;
+    font-size: 11px;
+    color: white;
+
+}
+
+.search-content .no-results {
+    float: left;
+    margin: 20px 0 20px 0;
+    color: white;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.search-content .results-list{
+    margin: 0;
+    padding: 0;
+
+}
+
+.search-content .list-item {
+    display: flex;
+    padding: 0 0 12px 0;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #ccc;
+}
+
+.search-content .item-content {
+    padding: 0 0 0 12px;
+
+}
+
+.search-content .item-image {
+    flex: 0 0 100px;
+    width: 100%;
+}
+.search-content .item-title {
+    display: flex;
+    align-items: flex-end;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+
+.search-content .item-details {
+    display: flex;
+    margin-bottom: 6px;
+    font-size: 11px;
+}
+.search-content .item-detail {
+        display: inline-block;
+    margin-right: 8px;
+}
+
+.search-content .item-description {
+    font-size: 12px;
+    margin-bottom: 6px;
+}
