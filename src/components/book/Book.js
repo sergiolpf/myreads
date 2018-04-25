@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardMedia, CardTitle } from 'material-ui/Card';
 import Image from 'material-ui-image';
-import {Link} from 'react-router-dom';
 import {DragSource, DropTarget} from 'react-dnd';
 import {findDOMNode} from 'react-dom';
 import flow from 'lodash/flow';
-import {ItemTypes} from './../constants/Constants';
-import PropTypes from 'prop-types'
-
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import { ItemTypes } from './../constants/Constants';
+import PropTypes from 'prop-types';
+import CustomMenu from './CustomMenu';
+import NoCover from './../../images/cover-no-image.jpg'
 
 import './book.css'
 
@@ -38,23 +36,53 @@ const styles = {
     cardText: {
         paddingTop: 0,
     },
+    actionButton: {
+        height: 30,
+        width: 30,
 
-}
-
+    }
+};
 
 class Book extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            open: false,
+            anchorEl: null
+        };
+
+        this.changeShelf = this.changeShelf.bind(this);
+    }
+
     authorStringfy(authors) {
         let sAuthors = authors.join(', ');
 
         return (sAuthors.length > 0) ? "by " + sAuthors : "";
     }
 
+    changeShelf(newShelf) {
+        this.props.onBookUpdate(this.props.book, newShelf);
+    }
+
+    getImage(book){
+        return <Image src={
+            this.hasImage(book)
+                ? book.imageLinks.thumbnail
+                : NoCover
+        } aspectRatio={(2 / 3)}/>
+
+    }
+
+    hasImage (book) {
+        return book.imageLinks && book.imageLinks.hasOwnProperty('thumbnail') ? true : false;
+    }
+
     render() {
         const {book, isDragging, connectDragSource, connectDropTarget} = this.props;
         const opacity = isDragging ? 0 : 1;
-        /*{<div className="book" style={{opacity}}>}*/
         return (
-            <div className="book" style={{opacity}}
+            <div className="book" style={{opacity, position:"relative"}}
                  ref={instance => {
                      const node = findDOMNode(instance);
                      connectDragSource(node);
@@ -62,7 +90,7 @@ class Book extends Component {
                  }}>
                 <Card key={book.id} className="book-content">
                     <CardMedia>
-                        <Image src={book.imageLinks.thumbnail} aspectRatio={(2 / 3)}/>
+                        {this.getImage(book)}
                     </CardMedia>
                     <CardTitle
                         style={styles.cardTitle}
@@ -72,11 +100,15 @@ class Book extends Component {
                         subtitleStyle={styles.authors}
 
                     />
-                    <CardText style={styles.cardText}>
+                    {/*<CardText style={styles.cardText}>
                         <Link to="/info/" style={styles.moreInfo}>more info...</Link>
-                    </CardText>/ >
+                    </CardText>*/}
                 </Card>
+                <CustomMenu currentShelf={book.shelf}
+                            style={{top:180, right:4}}
+                            onChangingShelfs={this.changeShelf} />
             </div>
+
         )
     }
 }
@@ -95,9 +127,6 @@ const bookSource = {
         const item = monitor.getItem();
         const dropResult = monitor.getDropResult();
 
-        console.log("book-endDrag - item:", item);
-        console.log("book-endDrag - dropResult:", dropResult);
-
         if (dropResult && dropResult.shelfId !== item.shelfId) {
             props.removeBook(item.index);
         }
@@ -105,7 +134,6 @@ const bookSource = {
 };
 
 const bookTarget = {
-
     hover(props, monitor, component) {
         return {}
     }
