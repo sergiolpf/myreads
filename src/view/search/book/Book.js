@@ -56,7 +56,9 @@ class Book extends Component {
                 <div className="item-content">
                     <div className="item-title">
                         {book.title}
-                        {this.hasShelf(book) && (<Chip style={{marginLeft: 10, fontWeight: 700}}>{this.getShelfName(book.shelf)}</Chip>)}
+                        {this.hasShelf(book)
+                            && ShelfTypes[book.shelf].display
+                            && (<Chip style={{marginLeft: 10, fontWeight: 700}}>{this.getShelfName(book.shelf)}</Chip>)}
                     </div>
                     <div className="item-details">
                         {this.hasYear(book) && (
