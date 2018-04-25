@@ -18,7 +18,7 @@ const style = {
         fontSize: 30,
         paddingTop: 10,
     }
-}
+};
 
 class Shelf extends Component {
     constructor(props) {
@@ -28,16 +28,11 @@ class Shelf extends Component {
     }
 
     pushBook(book) {
-        console.log("shelf - pushbook - id", this.props.id);
-        console.log("shelf - pushbook - book", book);
-
-
         const newState = update(this.state, {
             shelfBooks: {
                 $push: [book]
             }
         });
-        console.log("shelf - pushbook - new state", newState);
         this.setState({newState});
         this.props.onBookUpdate(book, this.props.id)
     }
@@ -73,7 +68,7 @@ class Shelf extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState){
-        return this.state === nextState ? false : true;
+        return this.state !== nextState;
 
     }
 
@@ -89,7 +84,7 @@ class Shelf extends Component {
                        ref={instance => connectDropTarget(findDOMNode(instance))}>
 
                     <div className="shelfTitle">
-                        <Toolbar className="shelfTitleContainer">
+                        <Toolbar className="shelfTitleContainer" >
                             <ToolbarGroup>
                                 <ToolbarTitle text={this.props.title} style={style.shelfTitle}/>
                             </ToolbarGroup>
@@ -103,6 +98,7 @@ class Shelf extends Component {
                                 book={book}
                                 shelfId={book.shelf}
                                 index={i}
+                                onBookUpdate={this.props.onBookUpdate}
                                 removeBook={this.removeBook.bind(this)}
                                 moveBook={this.moveBook.bind(this)}
                             />
@@ -121,7 +117,7 @@ Shelf.propTypes = {
     isOver: PropTypes.bool.isRequired ,
     canDrop: PropTypes.bool.isRequired,
     connectDropTarget: PropTypes.func.isRequired
-}
+};
 
 const bookTarget = {
     drop(props, monitor, component) {
@@ -132,7 +128,8 @@ const bookTarget = {
             shelfId: id
         }
     }
-}
+};
+
 export default DropTarget(Types.ItemTypes.BOOK, bookTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
