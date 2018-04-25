@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Shelf from './../../components/shelf/Shelf';
 import PropTypes from 'prop-types'
 import HTML5Backend from 'react-dnd-html5-backend';
+import { ShelfTypes } from './../../components/constants/Constants'
 
 import { DragDropContext } from 'react-dnd';
 
@@ -16,10 +17,10 @@ class Shelves extends Component {
     render() {
         return (
             <div className="shelves">
-                <h1>My Shelves</h1>
+                {/*<h1>My Shelves</h1>*/}
                 {
-                    Object.keys(this.props.types).map(key => {
-                        const type = this.props.types[key];
+                    Object.keys(ShelfTypes).map(key => {
+                        const type = ShelfTypes[key];
 
                         if (!type.display) return null;
 
@@ -43,11 +44,11 @@ Shelves.defaultProps = {
     books: [],
     onBookUpdate: () => {
     }
-}
+};
 
 Shelves.propTypes = {
     book: PropTypes.array,
     onBookUpdate: PropTypes.func.isRequired
-}
+};
 
 export default DragDropContext(HTML5Backend)(Shelves);

@@ -23,7 +23,7 @@ const muiTheme = getMuiTheme({
 });
 
 ReactDOM.render(
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
         <MuiThemeProvider muiTheme={muiTheme}>
             <App/>
         </MuiThemeProvider>

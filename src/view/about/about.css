@@ -1,0 +1,29 @@
+.about {
+    padding: 30px 40px 30px 30px;
+    position: relative;
+    font-family: 'La Belle Aurore', cursive;
+}
+
+.about h1 {
+    color: white;
+}
+.about .about-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: space-evenly;
+}
+
+.about-content .item {
+    margin-right: 10px;
+}
+
+a {
+    color: #1890ff;
+    background-color: transparent;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+    transition: color .3s;
+}

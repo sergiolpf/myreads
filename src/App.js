@@ -7,30 +7,6 @@ import Search from './view/search/Search'
 
 import { Route } from 'react-router-dom'
 
-const shelfTypes = {
-    currentlyReading: {
-        id: 'currentlyReading',
-        label: 'Currently Reading',
-        display: true
-    },
-    wantToRead: {
-        id: 'wantToRead',
-        label: 'Want to Read',
-        display: true
-    },
-    read: {
-        id: 'read',
-        label: 'Read',
-        display: true
-    },
-    none: {
-        id: 'none',
-        label: '',
-        display: false
-    }
-};
-
-
 class App extends Component {
 
     constructor(props) {
@@ -50,15 +26,15 @@ class App extends Component {
         })
     }
 
-    bookUpdate(book, shelf, callback = () =>{}) {
+    bookUpdate = (book, shelf, callback = () =>{}) => {
         if (shelf.trim() === '') return;
 
         BooksAPI.update(book, shelf).then(() => {
-            this.modifyBook(book, shelf)
+            this.modifyBook(book, shelf);
             return callback()
         });
 
-    }
+    };
 
     modifyBook(book, shelf) {
         book.shelf = shelf;
@@ -80,11 +56,11 @@ class App extends Component {
                 <Header />
                 <Route exact path="/" render={() => (
                     <Shelves books={this.state.books}
-                             types={shelfTypes}
-                             onBookUpdate={this.bookUpdate.bind(this)}/>
+                             onBookUpdate={this.bookUpdate}/>
                 )}/>
                 <Route path="/search" render={() => (
-                    <Search />
+                    <Search books={this.state.books}
+                            onBookUpdate={this.bookUpdate}/>
                 )}/>
                 <Route path="/about" component={About} />
 
